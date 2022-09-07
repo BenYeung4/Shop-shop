@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
-import { useQuery } from '@apollo/client';
+import React, { useEffect, useState } from "react";
+import { Link, useParams } from "react-router-dom";
+import { useQuery } from "@apollo/client";
 
-import { QUERY_PRODUCTS } from '../utils/queries';
-import spinner from '../assets/spinner.gif';
+import { QUERY_PRODUCTS } from "../utils/queries";
+import spinner from "../assets/spinner.gif";
 
 function Detail() {
   const { id } = useParams();
@@ -31,7 +31,7 @@ function Detail() {
           <p>{currentProduct.description}</p>
 
           <p>
-            <strong>Price:</strong>${currentProduct.price}{' '}
+            <strong>Price:</strong>${currentProduct.price}{" "}
             <button>Add to Cart</button>
             <button>Remove from Cart</button>
           </p>

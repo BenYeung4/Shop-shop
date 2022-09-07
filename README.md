@@ -17,6 +17,9 @@
 
 ## Installation
 
+npm install
+npm run seed
+
 ## Usage:
 
 ## Contributors:

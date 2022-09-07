@@ -1,9 +1,9 @@
-import React from 'react';
-import { useQuery } from '@apollo/client';
+import React from "react";
+import { useQuery } from "@apollo/client";
 
-import ProductItem from '../ProductItem';
-import { QUERY_PRODUCTS } from '../../utils/queries';
-import spinner from '../../assets/spinner.gif';
+import ProductItem from "../ProductItem";
+import { QUERY_PRODUCTS } from "../../utils/queries";
+import spinner from "../../assets/spinner.gif";
 
 function ProductList({ currentCategory }) {
   const { loading, data } = useQuery(QUERY_PRODUCTS);
