@@ -1,7 +1,15 @@
+//this file can be used with the tests
+
 import {
   UPDATE_PRODUCTS,
   UPDATE_CATEGORIES,
   UPDATE_CURRENT_CATEGORY,
+  ADD_TO_CART,
+  ADD_MULTIPLE_TO_CART,
+  REMOVE_FROM_CART,
+  UPDATE_CART_QUANTITY,
+  CLEAR_CART,
+  TOGGLE_CART,
 } from "./actions";
 
 //used to help initialize our global state object and then provide us with the functionality for updating the state by automatically running it through our custom reducer() function.
@@ -24,6 +32,56 @@ export const reducer = (state, action) => {
         currentCategory: action.currentCategory,
       };
 
+    //adding to cart
+    case ADD_TO_CART:
+      return {
+        //...state to pserserve everything else on state
+        ...state,
+        //set to true so user can view the cart with newly added item
+        cartOpen: true,
+        cart: [...state.cart, action.product],
+      };
+
+    case ADD_MULTIPLE_TO_CART:
+      return {
+        ...state,
+        cart: [...state.cart, ...action.products],
+      };
+
+    case REMOVE_FROM_CART:
+      let newState = state.cart.filter((product) => {
+        return product._id !== action._id;
+      });
+      return {
+        ...state,
+        cartOpen: newState.length > 0,
+        cart: newState,
+      };
+
+    case UPDATE_CART_QUANTITY:
+      return {
+        ...state,
+        cartOpen: true,
+        cart: state.cart.map((product) => {
+          if (action._id === product._id) {
+            product.purchaseQuantity = action.purchaseQuantity;
+          }
+          return product;
+        }),
+      };
+
+    case CLEAR_CART:
+      return {
+        ...state,
+        cartOpen: false,
+        cart: [],
+      };
+
+    case TOGGLE_CART:
+      return {
+        ...state,
+        cartOpen: !state.cartOpen,
+      };
     //if its none of these actions, do not update state at all and keep things the same!
     default:
       return state;
