@@ -1,4 +1,4 @@
-import { gql } from '@apollo/client';
+import { gql } from "@apollo/client";
 
 export const QUERY_PRODUCTS = gql`
   query getProducts($category: ID) {
@@ -57,6 +57,15 @@ export const QUERY_USER = gql`
           image
         }
       }
+    }
+  }
+`;
+
+//for stripe and checkout Cart/index.js
+export const QUERY_CHECKOUT = gql`
+  query getCheckout($products: [ID]!) {
+    checkout(products: $products) {
+      session
     }
   }
 `;
