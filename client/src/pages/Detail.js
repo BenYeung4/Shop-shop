@@ -15,6 +15,9 @@ import {
 
 import Cart from "../components/Cart";
 
+//indexedDB data saving and retrivin funcationality to display in DevTools in applicaitno
+import { idbPromise } from "../utils/helpers";
+
 function Detail() {
   const [state, dispatch] = useStoreContext();
   const { id } = useParams();
@@ -55,8 +58,22 @@ function Detail() {
         type: UPDATE_PRODUCTS,
         products: data.products,
       });
+      data.products.forEach((product) => {
+        idbPromise("products", "put", product);
+      });
     }
-  }, [products, data, dispatch, id]);
+    // add else if to check if `loading` is undefined in `useQuery()` Hook, that is if we went offline
+    else if (!loading) {
+      // since we're offline, get all of the data from the `products` store
+      idbPromise("products", "get").then((indexedProducts) => {
+        // use retrieved data to set global state for offline browsing
+        dispatch({
+          type: UPDATE_PRODUCTS,
+          products: indexedProducts,
+        });
+      });
+    }
+  }, [products, data, loading, dispatch, id]);
 
   //on the item page, will remove all the items from the cart
   const removeFromCart = () => {
