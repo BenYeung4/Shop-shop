@@ -7,6 +7,9 @@ import {
 } from "../../utils/actions";
 import { useStoreContext } from "../../utils/GlobalState";
 
+//to get the products in indexedBD
+import { idbPromise } from "../../utils/helpers";
+
 function CategoryMenu() {
   //useStoreContext() Hook to retrieve the current state form the global state object.  the dispatch() method to update state
   const [state, dispatch] = useStoreContext();
@@ -15,7 +18,7 @@ function CategoryMenu() {
   const { categories } = state;
 
   //since we currently dont have data in state yet, we take the categoryData that returns from the useQuery() Hook and use the dispatch() method to set our cglobal state.  need to use useEffect() Hook
-  const { data: categoryData } = useQuery(QUERY_CATEGORIES);
+  const { loading, data: categoryData } = useQuery(QUERY_CATEGORIES);
 
   //useEffect() hook takes two arguments function to run given a certain condition and then the condition
   useEffect(() => {
@@ -26,8 +29,23 @@ function CategoryMenu() {
         type: UPDATE_CATEGORIES,
         categories: categoryData.categories,
       });
+      // but let's also take each categories and save it to IndexedDB using the helper function
+
+      categoryData.categories.forEach((category) => {
+        idbPromise("categories", "put", category);
+      });
+      // add else if to check if `loading` is undefined in `useQuery()` Hook, that is if we went offline
+    } else if (!loading) {
+      // since we're offline, get all of the data from the `categories` store
+
+      idbPromise("categories", "get").then((categories) => {
+        dispatch({
+          type: UPDATE_CATEGORIES,
+          categories: categories,
+        });
+      });
     }
-  }, [categoryData, dispatch]);
+  }, [categoryData, loading, dispatch]);
 
   const handleClick = (id) => {
     dispatch({
